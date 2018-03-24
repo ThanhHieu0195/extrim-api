@@ -39,6 +39,49 @@ class MyAPI extends API
         }
     }
 
+    protected function google()
+    {
+        if ($this->method == 'GET') {
+            require_once 'libs/Google-Plus/gpConfig.php';
+            switch ($this->verb) {
+                case 'link':
+                    return $gClient->createAuthUrl();
+                case 'callback':
+                    if (isset($_GET['code'])) {
+                        $gClient->authenticate($_GET['code']);
+                        $access_token = $gClient->getAccessToken();
+                        $access_token = json_decode($access_token, true);
+                        $token = $access_token['access_token'];
+                        $gUser = $google_oauthV2->userinfo->get();
+                        require_once 'User.php';
+                        $user = new User();
+
+                        $username = $gUser['id'];
+                        $displayname = $gUser['name'];
+
+                        $password = $token;
+
+                        $birthday = 0;
+                        $email = $gUser['email'];
+
+                        //check current
+                        if ($user->hasUser(array('username' => $username))) {
+                            //update
+                            $user->getUser(array('username' => $username), true);
+                            $user->user->token = $token;
+                            if ($user->save()) {
+                                return $token;
+                            }
+                        } else {
+                            $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_G_PLUS, $token);
+                        }
+
+                        return $token;
+                    }
+            }
+        }
+    }
+
     protected function facebook()
     {
         require_once 'libs/Facebook/autoload.php';
@@ -142,10 +185,15 @@ class MyAPI extends API
 
     protected function register()
     {
+        $response = Constants::RESULT;
         if ($this->method == 'POST') {
             require_once 'User.php';
-            $res = array('status' => false, 'message' => 'Data error');
-            if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['birthday']) && isset($_POST['email']) && isset($_POST['displayname'])) {
+            if (isset($_POST['username'])
+                && isset($_POST['password'])
+                && isset($_POST['birthday'])
+                && isset($_POST['email'])
+                && isset($_POST['displayname'])
+            ) {
                 $username = $_POST['username'];
                 $displayname = $_POST['displayname'];
                 $password = $_POST['password'];
@@ -154,94 +202,166 @@ class MyAPI extends API
                 $type = User::TYPE;
                 $user = new User();
 
-                if ($user->register($username, $displayname, $password, $birthday, $email, $type)) {
-                    $res['status'] = true;
-                    $res['message'] = 'Register completed';
-                    $res['token'] = $user->getToken();
+                $result = $user->register($username, $displayname, $password, $birthday, $email, $type);
+                if ($result == 1) {
+                    $response['status'] = true;
+                    $response['message'] = Constants::MSS_CREATED;
+                    $response['token'] = $user->getToken();
+                } else if ($result == -1) {
+                    $response['message'] = Constants::MSS_DUPPLICATION_KEY;
                 }
             } else {
-                $res['message'] = 'Check again data';
+                $response['message'] = Constants::MSS_MISS_PARAMS;
             }
-            return $res;
         } else {
-            return "Only accepts POST requests";
+            $response['message'] = "Only accepts POST requests";
         }
+        return $response;
     }
 
     protected function product()
     {
-        if ($this->method == 'GET') {
-            require_once 'Product.php';
-            $product = new Product();
-            if (isset($_GET['id'])) {
-                $id = $_GET['id'];
-                return $product->getProduct($id);
-            } else {
-                return $product->getAllProduct();
-            }
-        } else {
-            return "Only accepts POST requests";
-        }
-    }
+        require_once 'Product.php';
+        $product = new Product();
 
-    protected function google()
-    {
-        if ($this->method == 'GET') {
-            require_once 'libs/Google-Plus/gpConfig.php';
-            switch ($this->verb) {
-                case 'link':
-                    return $gClient->createAuthUrl();
-                case 'callback':
-                    if (isset($_GET['code'])) {
-                        $gClient->authenticate($_GET['code']);
-                        $access_token = $gClient->getAccessToken();
-                        $access_token = json_decode($access_token, true);
-                        $token = $access_token['access_token'];
-                        $gUser = $google_oauthV2->userinfo->get();
-                        require_once 'User.php';
-                        $user = new User();
+        switch ($this->method) {
+            case 'GET':
+                //get information product -> /api/v1/product/:id [GET]
+                if ( isset($_GET['id']) ) {
+                    $id = $_GET['id'];
+                    return $product->getProduct($id);
+                } else {
+                    return $product->getAllProduct();
+                }
+            case 'POST':
+                $response = Constants::RESULT;
 
-                        $username = $gUser['id'];
-                        $displayname = $gUser['name'];
+                //create new service -> /api/v1/service/create [POST]
+                require_once 'User.php';
 
-                        $password = $token;
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
 
-                        $birthday = 0;
-                        $email = $gUser['email'];
+                if ($this->verb=='create') {
+                    if (isset($_POST['title'])
+                        && isset($_POST['description'])
+                        && isset($_POST['content'])
+                        && isset($_POST['price'])
+                        && isset($_POST['author'])
+                        && isset($_POST['producer'])
+                        && isset($_POST['attachment'])
+                    ) {
+                        $title = $product->escape($_POST['title']);
+                        $description = $_POST['description'];
+                        $content = $_POST['content'];
+                        $price = floatval($_POST['price']);
+                        $author = $_POST['author'];
+                        $producer = $_POST['producer'];
+                        $attacment = $_POST['attachment'];
 
-                        //check current
-                        if ($user->hasUser(array('username' => $username))) {
-                            //update
-                            $user->getUser(array('username' => $username), true);
-                            $user->user->token = $token;
-                            if ($user->save()) {
-                                return $token;
+                        $id = $product->create($title, $description, $content, $price, $author, $producer, $attacment);
+
+                        if ($id) {
+                            $response['error'] = false;
+                            $response['message'] = Constants::MSS_CREATED;
+                            $response['id'] = $id;
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            case 'DELETE':
+                $response = Constants::RESULT;
+
+                //update service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb=='delete') {
+                    if ( isset($_GET['id'])) {
+                        $id = intval($_GET['id']);
+                        if ($id) {
+                            $product->getService($id);
+                            $result = $product->remove();
+                            if ($result) {
+                                $response['error'] = false;
+                                $response['message'] = Constants::MSS_DELETE;
                             }
                         } else {
-                            $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_G_PLUS, $token);
+                            $response['message'] = Constants::MSS_API_NOTWORK;
                         }
-
-                        return $token;
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
                     }
-            }
+                    return $response;
+                }
+            case 'PUT':
+                $response = Constants::RESULT;
+
+                //update service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb=='update') {
+                    if ( isset($_GET['id']) && !empty($this->file) ) {
+                        $id = intval($_GET['id']);
+                        $params = json_decode($this->file);
+                        if ($id) {
+                            $product->getProduct($id);
+                            if ($product->isExists()) {
+                                if (!empty($params)) {
+                                    foreach ($params as $key => $value) {
+                                        $product->{$key} = $value;
+                                    }
+                                }
+                                $result = $product->save();
+                                if ($result) {
+                                    $response['error'] = false;
+                                    $response['message'] = Constants::MSS_UPDATED;
+                                    $response['data'] = $product->product;
+                                }
+                            }
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            default:
         }
+        return Constants::MSS_NOT_SUPPORT;
     }
 
     public function attachment()
     {
         require_once 'Attachment.php';
-        if ($this->verb == 'upload' ) {
-                if (!empty($_FILES)) {
-                    foreach ($_FILES as $filename => $file) {
-                        $attachment = new Attachment();
-                        $attachment_id = $attachment->upload($file);
-                        if ($attachment_id) {
-                            return $attachment_id;
-                        }
-                        return false;
+        if ($this->verb == 'upload') {
+            if (!empty($_FILES)) {
+                foreach ($_FILES as $filename => $file) {
+                    $attachment = new Attachment();
+                    $attachment_id = $attachment->upload($file);
+                    if ($attachment_id) {
+                        return $attachment_id;
                     }
+                    return false;
                 }
-                return '';
+            }
+            return '';
         } else {
             if ($this->method == 'GET') {
                 if (isset($_GET['id']) && $_GET['id']) {
@@ -256,5 +376,121 @@ class MyAPI extends API
         }
 
         return 'Method not support';
+    }
+
+    protected function service()
+    {
+        require_once 'Service.php';
+        $service = new Service();
+
+        switch ($this->method) {
+            case 'GET':
+                //get information service -> /api/v1/service/:id [GET]
+                if ( isset($_GET['id']) ) {
+                    $id = $_GET['id'];
+                    return $service->getService($id);
+                } else {
+                    return $service->getAllService();
+                }
+            case 'POST':
+                $response = Constants::RESULT;
+
+                //create new service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb=='create') {
+                    if (isset($_POST['title']) && isset($_POST['price']) && isset($_POST['attachment'])) {
+                        $title = $service->escape($_POST['title']);
+                        $price = floatval($_POST['price']);
+                        $attacment = $_POST['attachment'];
+                        $id = $service->create($title, $price, $attacment);
+                        if ($id) {
+                            $response['error'] = false;
+                            $response['message'] = Constants::MSS_CREATED;
+                            $response['id'] = $id;
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            case 'DELETE':
+                $response = Constants::RESULT;
+
+                //update service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb=='delete') {
+                    if ( isset($_GET['id'])) {
+                        $id = intval($_GET['id']);
+                        if ($id) {
+                            $service->getService($id);
+                            $result = $service->remove();
+                            if ($result) {
+                                $response['error'] = false;
+                                $response['message'] = Constants::MSS_DELETE;
+                            }
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            case 'PUT':
+                $response = Constants::RESULT;
+
+                //update service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb=='update') {
+                    if ( isset($_GET['id']) && !empty($this->file) ) {
+                        $id = intval($_GET['id']);
+                        $params = json_decode($this->file);
+                        if ($id) {
+                            $service->getService($id);
+                            if ($service->isExists()) {
+                                if (!empty($params)) {
+                                    foreach ($params as $key => $value) {
+                                        $service->{$key} = $value;
+                                    }
+                                }
+                                $result = $service->save();
+                                if ($result) {
+                                    $response['error'] = false;
+                                    $response['message'] = Constants::MSS_UPDATED;
+                                    $response['data'] = $service->service;
+                                }
+                            }
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            default:
+        }
+        return Constants::MSS_NOT_SUPPORT;
+
     }
 }

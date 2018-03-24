@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2018 at 03:58 PM
+-- Generation Time: Mar 24, 2018 at 07:22 AM
 -- Server version: 5.7.21-0ubuntu0.16.04.1
 -- PHP Version: 7.1.11
 
@@ -110,7 +110,8 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `title`, `description`, `content`, `price`, `author`, `producer`, `date_created`, `attachment`) VALUES
-(1, 'Bàn chải long mềm', 'Bàn chải vệ sinh đặc biệt phù hợp cho những chất liệu giày có cấu tạo phức tạp và vãi dễ bị tổn thương', 'Bàn chải vệ sinh đặc biệt phù hợp cho những chất liệu giày có cấu tạo phức tạp và vãi dễ bị tổn thương', 180, 2, 'ABC S', 1521349480, NULL);
+(1, 'title put', 'Bàn chải vệ sinh đặc biệt phù hợp cho những chất liệu giày có cấu tạo phức tạp và vãi dễ bị tổn thương', 'Bàn chải vệ sinh đặc biệt phù hợp cho những chất liệu giày có cấu tạo phức tạp và vãi dễ bị tổn thương', 180, 2, 'ABC S', 1521349480, -1),
+(4, 'this is title', 'this is description', 'this is content', 100, 2, 'this is producer', 1521871198, -1);
 
 -- --------------------------------------------------------
 
@@ -122,8 +123,16 @@ CREATE TABLE `service` (
   `id` int(11) NOT NULL,
   `title` varchar(455) COLLATE utf8_unicode_ci NOT NULL,
   `price` float NOT NULL,
-  `attachment` int(11) NOT NULL
+  `attachment` int(11) DEFAULT NULL,
+  `date_created` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `service`
+--
+
+INSERT INTO `service` (`id`, `title`, `price`, `attachment`, `date_created`) VALUES
+(1, 'title put', 100, -1, 1521866674);
 
 -- --------------------------------------------------------
 
@@ -149,9 +158,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `display_name`, `password`, `birthday`, `email`, `level`, `date_created`, `type`, `token`) VALUES
-(2, 'hieutct', 'Hiếu Ngầu', '202cb962ac59075b964b07152d234b70', 790502400, 'thanhhieu0195@gmail.com', 0, 1521304371, 0, '533780ab61fe28d3c830ef3c0a9de375'),
+(2, 'hieutct', 'Hiếu Ngầu', '202cb962ac59075b964b07152d234b70', 790502400, 'thanhhieu0195@gmail.com', 0, 1521304371, 0, 'e5daedf2cbd11d28ff3b94877e6e1c1a'),
 (3, '856641977805897', 'Hiếu Thanh', '8278fc7fc1d0d696480d6565632ea411', 0, '', 1, 1521595686, 0, 'EAAapDwlPmRkBAF83Ap82y8dy4F6V44NyNm2Tt4FmTsGYstQP9SFhiOC6sVZBXZB0NNxrJHntCrZAM9GAhRfYAZCMbdcJfkyqPyZCtxGDE292oDTe2sqTpTMKFF04BHJwZASWgxLtdgPhZCATZBpZC6nkp9XBXePD5w5UTH9wuTyrHEgZDZD'),
-(5, '110778352213465772240', 'HIEU THANH', 'fc9f055a8f196723da3e8cabeae82bbb', 0, 'thanhhieu0195@gmail.com', 1, 1521642874, 0, 'ya29.GluGBdLT3EWPFAcWwMVxZFZ3tVSIVoYtYKqfTy09s_wn7kGFVRPmFsuCY2PA9B_WrXMfQ3edBfTN6QcaGmftz2f5NuTwMjMkne39H45Cx0ugcuT4L4voHNgPF6CT');
+(5, '110778352213465772240', 'HIEU THANH', 'fc9f055a8f196723da3e8cabeae82bbb', 0, 'thanhhieu0195@gmail.com', 1, 1521642874, 0, 'ya29.GluGBdLT3EWPFAcWwMVxZFZ3tVSIVoYtYKqfTy09s_wn7kGFVRPmFsuCY2PA9B_WrXMfQ3edBfTN6QcaGmftz2f5NuTwMjMkne39H45Cx0ugcuT4L4voHNgPF6CT'),
+(10, 'guest', 'Guest', '202cb962ac59075b964b07152d234b70', 123, 'guest@gmail.com', 1, 1521872222, 0, ''),
+(11, 'guest', 'Guest', '202cb962ac59075b964b07152d234b70', 123, 'guest@gmail.com', 1, 1521872290, 0, 'd0225aa191b5b66af8b84dc713bd8b1f');
 
 --
 -- Indexes for dumped tables
@@ -223,19 +234,19 @@ ALTER TABLE `category_relationships`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
@@ -252,7 +263,6 @@ ALTER TABLE `category_relationships`
 -- Constraints for table `product`
 --
 ALTER TABLE `product`
-  ADD CONSTRAINT `product_attachment` FOREIGN KEY (`attachment`) REFERENCES `attachment` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `product_author` FOREIGN KEY (`author`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 

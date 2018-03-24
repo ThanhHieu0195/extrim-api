@@ -15,4 +15,20 @@ class Constants {
     const G_CLIENT_SECRECT = 'nXF40oS0Gu6EU9S5SGuB628c';
 
     const DIR_UPLOAD = 'uploads';
+    const RESULT = array(
+        'error' => true,
+        'message' => ''
+    );
+
+    const DEFAULT_EMPTY = -1;
+
+    //message
+    const MSS_NOT_PERFORMANCE = 'not performance!';
+    const MSS_NOT_SUPPORT = 'api is not support!';
+    const MSS_MISS_PARAMS = 'missed params!';
+    const MSS_API_NOTWORK = 'api is not work!';
+    const MSS_CREATED = 'successfully created!';
+    const MSS_UPDATED = 'successfully updated!';
+    const MSS_DELETE = 'successfully deleted!';
+    const MSS_DUPPLICATION_KEY = 'dupplication key!';
 }

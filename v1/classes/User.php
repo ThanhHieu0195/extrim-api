@@ -22,6 +22,14 @@ class User extends DB
         }
     }
 
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->user)) {
+            return $this->user->{$name};
+        }
+        return false;
+    }
+
     public function getUserByUser($username, $password, $apply=false)
     {
         $username = $this->escape($username);
@@ -62,8 +70,12 @@ class User extends DB
 
     public function register($username, $display_name, $password, $birthday, $email, $type='', $token='')
     {
+        if ($this->hasUser(array('username' => $username))) {
+            return -1;
+        }
+
         $username = $this->escape($username);
-        if (!empty($token)) {
+        if (empty($token)) {
             $token = $this->generateToken($username);
         }
 
@@ -76,13 +88,12 @@ class User extends DB
         if ( !empty($type) ) {
             $type = self::TYPE;
         }
-
         if ($this->insert(self::TABLE, array('username' => $username, 'display_name' => $display_name, 'password' => $password, 'token' => $token, 'email' => $email, 'date_created' => $date_created,
             'level' => $level, 'birthday' => $birthday, 'type' => $type))) {
             $this->getUserByToken($token, true);
             return $this->user->token;
         }
-        return false;
+        return 0;
     }
 
     public function checkLogin()
@@ -142,4 +153,17 @@ class User extends DB
         return false;
     }
 
+    public function isWho($role) {
+        if ($this->level == $role) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isExist() {
+        if (isset($this->user) && !empty($this->user) ) {
+            return true;
+        }
+        return false;
+    }
 }

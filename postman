@@ -1,0 +1,424 @@
+{
+	"id": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+	"name": "Extrim",
+	"description": "",
+	"order": [
+		"0db5b676-8fac-3747-b32c-c19f6eb0261f",
+		"e9c79a05-7249-a28c-c31c-6b15fed70612",
+		"b995f547-8ff7-a8d9-169a-7d436c2835ba",
+		"51adae97-e50b-af07-ad3e-700e9c27ecbf",
+		"57bb6f0b-487b-d383-870f-68641c90b6fb",
+		"b53db4db-a41b-6dc7-0ffd-f077f62793c5",
+		"c168ec1d-401e-36ea-3f7b-db0db24ae966",
+		"f4d0e352-7b53-addd-cce9-209925b86c37"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1521863948248,
+	"owner": "1145673",
+	"public": false,
+	"requests": [
+		{
+			"id": "0db5b676-8fac-3747-b32c-c19f6eb0261f",
+			"headers": "",
+			"headerData": [],
+			"url": "{{api_url}}/login",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "username",
+					"value": "hieutct",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521871459829,
+			"name": "login",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": []
+		},
+		{
+			"id": "51adae97-e50b-af07-ad3e-700e9c27ecbf",
+			"headers": "",
+			"headerData": [],
+			"url": "{{api_url}}/service/1/",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [
+				{
+					"key": "title",
+					"value": "tile change",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "price",
+					"value": "100",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				},
+				{
+					"key": "attachment",
+					"value": "",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521868012017,
+			"name": "service-retrieve",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": []
+		},
+		{
+			"id": "57bb6f0b-487b-d383-870f-68641c90b6fb",
+			"headers": "",
+			"headerData": [],
+			"url": "{{api_url}}/product/1",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": [
+				{
+					"key": "title",
+					"value": "tile change",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "price",
+					"value": "100",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				},
+				{
+					"key": "attachment",
+					"value": "",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521871835509,
+			"name": "product-retrieve",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": []
+		},
+		{
+			"id": "b53db4db-a41b-6dc7-0ffd-f077f62793c5",
+			"headers": "token: {{token}}\n",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{api_url}}/product/create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "title",
+					"value": "this is title",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "description",
+					"value": "this is description",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "content",
+					"value": "this is content",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "price",
+					"value": "100",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "author",
+					"value": "2",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "producer",
+					"value": "this is producer",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "attachment",
+					"value": "",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521871206198,
+			"name": "product-create",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": []
+		},
+		{
+			"id": "b995f547-8ff7-a8d9-169a-7d436c2835ba",
+			"headers": "token: {{token}}\nContent-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{token}}",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{api_url}}/service/update?id=1",
+			"queryParams": [
+				{
+					"key": "id",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "PUT",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521870072296,
+			"name": "product-update",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": [],
+			"rawModeData": "{\n\t\"title\" : \"title put\"\n}"
+		},
+		{
+			"id": "c168ec1d-401e-36ea-3f7b-db0db24ae966",
+			"headers": "token: {{token}}\nContent-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{token}}",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{api_url}}/product/update?id=1",
+			"queryParams": [
+				{
+					"key": "id",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "PUT",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521871406723,
+			"name": "product-update",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": [],
+			"rawModeData": "{\n\t\"title\" : \"title put\"\n}"
+		},
+		{
+			"id": "e9c79a05-7249-a28c-c31c-6b15fed70612",
+			"headers": "token: {{token}}\n",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{api_url}}/service/create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "title",
+					"value": "test",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "price",
+					"value": "100",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "attachment",
+					"value": "",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521867781297,
+			"name": "service-create",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": []
+		},
+		{
+			"id": "f4d0e352-7b53-addd-cce9-209925b86c37",
+			"headers": "//Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": false
+				}
+			],
+			"url": "{{api_url}}/register",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "username",
+					"value": "guest",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "birthday",
+					"value": "123",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "email",
+					"value": "guest@gmail.com",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "displayname",
+					"value": "Guest",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521872503509,
+			"name": "register",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": []
+		}
+	]
+}

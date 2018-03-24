@@ -10,13 +10,13 @@ class Service extends DB
         parent::__construct();
     }
 
-    public function getProduct($id) {
+    public function getService($id) {
         $sql = "SELECT * FROM `" . self::TABLE . "` WHERE id='$id';";
-        $this->product = $this->get_row($sql, true);
+        $this->service = $this->get_row($sql, true);
         return $this->service;
     }
 
-    public function getAllProduct() {
+    public function getAllService() {
         $limit = Constants::NUMSERVICE;
         $table = self::TABLE;
         $sql = "SELECT * FROM $table LIMIT $limit;";
@@ -26,6 +26,10 @@ class Service extends DB
 
     public function create($title, $price, $attachment) {
         $date_created = time();
+        if ( empty($attachment) ) {
+            $attachment = -1;
+        }
+
         $result = $this->insert(self::TABLE, array(
             'title' => $title,
             'price' => $price,
@@ -37,5 +41,43 @@ class Service extends DB
             return $this->lastid();
         }
         return '';
+    }
+
+    public function isExists() {
+        if (!empty($this->service)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function save() {
+        return $this->update(self::TABLE, $this->service, array('id' => $this->id));
+    }
+
+    public function remove() {
+        return $this->delete(self::TABLE, array('id' => $this->id));
+    }
+
+    public function __get($name)
+    {
+        if ( array_key_exists($name, $this->service)) {
+            return $this->service->{$name};
+        }
+        return '';
+    }
+
+    public function __isset($name)
+    {
+        if ( array_key_exists($name, $this->service)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function __set($name, $value)
+    {
+        if (isset($this->{$name})) {
+            $this->service->{$name} = $value;
+        }
     }
 }
