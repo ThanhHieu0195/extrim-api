@@ -12,16 +12,6 @@ class User extends DB
 
     public $user = array();
 
-    public function __construct($username = '', $password = '', $token = '')
-    {
-        parent::__construct();
-        if (empty($token)) {
-            $this->getUserByUser($username, $password, true);
-        } else {
-            $this->getUserByToken($token, true);
-        }
-    }
-
     public function __get($name)
     {
         if (array_key_exists($name, $this->user)) {
@@ -96,14 +86,6 @@ class User extends DB
         return 0;
     }
 
-    public function checkLogin()
-    {
-        if (!empty($this->user)) {
-            return true;
-        }
-        return false;
-    }
-
     public function generateToken($username)
     {
         return Helper::randomString($username);
@@ -117,17 +99,6 @@ class User extends DB
     protected function setToken($token)
     {
         return $this->user->token = $token;
-    }
-
-    public function login()
-    {
-        if ($this->checkLogin()) {
-            $token = $this->generateToken($this->user->username);
-            if ($this->setToken($token) && $this->upDateToken()) {
-                return $token;
-            }
-        }
-        return false;
     }
 
     public function upDateToken()
@@ -162,6 +133,23 @@ class User extends DB
 
     public function isExist() {
         if (isset($this->user) && !empty($this->user) ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getInfomation() {
+        $user = $this->user;
+        unset($user->id);
+        unset($user->password);
+        unset($user->level);
+        unset($user->type);
+        unset($user->token);
+        return $user;
+    }
+
+    public function isExists() {
+        if (!empty($this->user)) {
             return true;
         }
         return false;

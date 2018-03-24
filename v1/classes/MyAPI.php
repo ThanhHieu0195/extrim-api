@@ -18,25 +18,44 @@ class MyAPI extends API
     {
         if ($this->method == 'POST') {
             require_once 'User.php';
-            $res = array('status' => false, 'message' => 'Data error');
 
-            if (isset($_POST['username']) && isset($_POST['password'])) {
-                $username = $_POST['username'];
-                $password = $_POST['password'];
-                $user = new User($username, $password);
-
-                if ($user->login()) {
-                    $res['status'] = true;
-                    $res['message'] = 'Login completed';
-                    $res['token'] = $user->getToken();
+            $response = Constants::RESULT;
+            if (isset($_POST['email']) && isset($_POST['password'])) {
+                $email = $_POST['email'];
+                $password = md5($_POST['password']);
+                $user = new User();
+                $user->getUser(array('email' => $email, 'password' => $password), true);
+                if ($user->isExists()) {
+                    $response['error'] = false;
+                    $response['message'] = 'Login completed';
+                    $response['token'] = $user->getToken();
                 }
             } else {
-                $res['message'] = 'Check again username and password';
+                $response['message'] = Constants::MSS_MISS_PARAMS;
             }
-            return $res;
         } else {
-            return "Only accepts POST requests";
+            $response['message'] = Constants::MSS_NOT_SUPPORT;
         }
+        return $response;
+    }
+
+    protected function user() {
+        require_once 'User.php';
+        $response = Constants::RESULT;
+        if ($this->method == 'GET') {
+            $user = Helper::getCurrentUser();
+
+            if (!empty($user)) {
+                $response['error'] = true;
+                $response['message'] = Constants::MSS_ACTION_SUCCESSED;
+                $response['user'] = $user->getInfomation();
+            } else {
+                $response['message'] = Constants::MSS_INVALIDTOKEN;
+            }
+        } else {
+            $response['message'] = Constants::MSS_NOT_SUPPORT;
+        }
+        return $response;
     }
 
     protected function google()

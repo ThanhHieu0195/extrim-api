@@ -8,6 +8,19 @@ class Helper {
         return md5(uniqid($str, true));
     }
 
+    static public function getCurrentUser() {
+        $token = self::getTokenRequest();
+
+        if ( !empty($token) ) {
+            $user = new User();
+            $user->getUserByToken($token, true);
+            if ($user->isExist() ) {
+                return $user;
+            }
+        }
+        return false;
+    }
+
     static public function checkPerfomance($role) {
         $token = self::getTokenRequest();
 

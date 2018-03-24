@@ -4,6 +4,7 @@ class Constants {
     const DB_USER='hieutct';
     const DB_PASS='123';
     const DB_NAME='extrim';
+
     const NUMPRODUCT = 10;
     const NUMSERVICE = 10;
     const HOME_URL = 'http://localhost.extrim.com';
@@ -32,4 +33,6 @@ class Constants {
     const MSS_UPDATED = 'successfully updated!';
     const MSS_DELETE = 'successfully deleted!';
     const MSS_DUPPLICATION_KEY = 'dupplication key!';
+    const MSS_ACTION_SUCCESSED = 'action is successed!';
+    const MSS_INVALIDTOKEN = 'Invalid token';
 }
