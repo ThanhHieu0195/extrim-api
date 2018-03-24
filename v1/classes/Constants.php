@@ -7,6 +7,7 @@ class Constants {
     const NUMPRODUCT = 10;
     const NUMSERVICE = 10;
     const HOME_URL = 'http://localhost.extrim.com';
+    const TOKEN_URL_CALLBACK = 'http://localhost:4200/callback';
     const FB_APP_ID = '1874731906079001';
     const FB_APP_SERECT = '5113c7d97fbe314ef228874903c17bc3';
     const FB_APP_V = 'v2.8';

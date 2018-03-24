@@ -64,19 +64,21 @@ class MyAPI extends API
                         $birthday = 0;
                         $email = $gUser['email'];
 
+                        $isCheck = false;
                         //check current
                         if ($user->hasUser(array('username' => $username))) {
                             //update
                             $user->getUser(array('username' => $username), true);
                             $user->user->token = $token;
-                            if ($user->save()) {
-                                return $token;
-                            }
+                            $isCheck = $user->save();
                         } else {
-                            $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_G_PLUS, $token);
+                            $isCheck = $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_G_PLUS, $token);
                         }
 
-                        return $token;
+                        if ($isCheck) {
+                            header('Location: '.Constants::TOKEN_URL_CALLBACK . '?token='.$token . '/');
+                            exit;
+                        }
                     }
             }
         }
@@ -164,20 +166,24 @@ class MyAPI extends API
                     $password = $token;
                     $birthday = $userFb->getBirthday();
                     $email = $userFb->getEmail();
+                    $isCheck = false;
                     //check current
                     if ($user->hasUser(array('username' => $username))) {
                         //update
                         $user->getUser(array('username' => $username), true);
                         $user->user->token = $token;
                         if ($user->save()) {
-                            return $token;
+                            $isCheck=true;
                         }
                     } else {
-                        $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_FACEBOOK, $token);
+                        $isCheck = $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_FACEBOOK, $token);
+
                     }
 
-                    header('location: '.Constants::HOME_URL);
-                    return $accessToken->getValue();
+                    if ($isCheck) {
+                        header('Location: '.Constants::TOKEN_URL_CALLBACK . '?token='.$token . '/');
+                        exit;
+                    }
             }
 
         }
