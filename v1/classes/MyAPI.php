@@ -432,11 +432,12 @@ class MyAPI extends API
                 }
 
                 if ($this->verb=='create') {
-                    if (isset($_POST['title']) && isset($_POST['price']) && isset($_POST['attachment'])) {
+                    if (isset($_POST['title']) && isset($_POST['description']) && isset($_POST['price']) && isset($_POST['attachment'])) {
                         $title = $service->escape($_POST['title']);
                         $price = floatval($_POST['price']);
                         $attacment = $_POST['attachment'];
-                        $id = $service->create($title, $price, $attacment);
+                        $description = $_POST['description'];
+                        $id = $service->create($title, $description, $price, $attacment);
                         if ($id) {
                             $response['error'] = false;
                             $response['message'] = Constants::MSS_CREATED;

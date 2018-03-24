@@ -24,7 +24,7 @@ class Service extends DB
         return $results;
     }
 
-    public function create($title, $price, $attachment) {
+    public function create($title, $description, $price, $attachment) {
         $date_created = time();
         if ( empty($attachment) ) {
             $attachment = -1;
@@ -32,6 +32,7 @@ class Service extends DB
 
         $result = $this->insert(self::TABLE, array(
             'title' => $title,
+            'description' => $description,
             'price' => $price,
             'attachment' => $attachment,
             'date_created' => $date_created

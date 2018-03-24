@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 24, 2018 at 07:22 AM
+-- Generation Time: Mar 24, 2018 at 11:57 AM
 -- Server version: 5.7.21-0ubuntu0.16.04.1
 -- PHP Version: 7.1.11
 
@@ -122,6 +122,7 @@ INSERT INTO `product` (`id`, `title`, `description`, `content`, `price`, `author
 CREATE TABLE `service` (
   `id` int(11) NOT NULL,
   `title` varchar(455) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(455) COLLATE utf8_unicode_ci NOT NULL,
   `price` float NOT NULL,
   `attachment` int(11) DEFAULT NULL,
   `date_created` int(11) DEFAULT NULL
@@ -131,8 +132,8 @@ CREATE TABLE `service` (
 -- Dumping data for table `service`
 --
 
-INSERT INTO `service` (`id`, `title`, `price`, `attachment`, `date_created`) VALUES
-(1, 'title put', 100, -1, 1521866674);
+INSERT INTO `service` (`id`, `title`, `description`, `price`, `attachment`, `date_created`) VALUES
+(1, 'title put', '', 100, -1, 1521866674);
 
 -- --------------------------------------------------------
 
@@ -158,8 +159,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `display_name`, `password`, `birthday`, `email`, `level`, `date_created`, `type`, `token`) VALUES
-(2, 'hieutct', 'Hiếu Ngầu', '202cb962ac59075b964b07152d234b70', 790502400, 'thanhhieu0195@gmail.com', 0, 1521304371, 0, 'e5daedf2cbd11d28ff3b94877e6e1c1a'),
-(3, '856641977805897', 'Hiếu Thanh', '8278fc7fc1d0d696480d6565632ea411', 0, '', 1, 1521595686, 0, 'EAAapDwlPmRkBAF83Ap82y8dy4F6V44NyNm2Tt4FmTsGYstQP9SFhiOC6sVZBXZB0NNxrJHntCrZAM9GAhRfYAZCMbdcJfkyqPyZCtxGDE292oDTe2sqTpTMKFF04BHJwZASWgxLtdgPhZCATZBpZC6nkp9XBXePD5w5UTH9wuTyrHEgZDZD'),
+(2, 'hieutct', 'Hiếu Ngầu', '202cb962ac59075b964b07152d234b70', 790502400, 'thanhhieu0195@gmail.com', 0, 1521304371, 0, '2c11e961fee26156a8b53fd342ad3c8e'),
+(3, '856641977805897', 'Hiếu Thanh', '8278fc7fc1d0d696480d6565632ea411', 0, '', 1, 1521595686, 0, 'EAAapDwlPmRkBAA7aMMUAtrjZCRlqAFMzxB0kbRmCI3vxRx9Xdc1OiR5qw2PHEQizZBnWgKdnnhRCV9imKoxcHe2a0zKD3dm2cdA6sgDcUB9Db8ErqLtNRSLIudgGehHF1xS17RdZCDktaNZBhrLYtZCeoWr17BTkb1Kk6M9peTAZDZD'),
 (5, '110778352213465772240', 'HIEU THANH', 'fc9f055a8f196723da3e8cabeae82bbb', 0, 'thanhhieu0195@gmail.com', 1, 1521642874, 0, 'ya29.GluGBdLT3EWPFAcWwMVxZFZ3tVSIVoYtYKqfTy09s_wn7kGFVRPmFsuCY2PA9B_WrXMfQ3edBfTN6QcaGmftz2f5NuTwMjMkne39H45Cx0ugcuT4L4voHNgPF6CT'),
 (10, 'guest', 'Guest', '202cb962ac59075b964b07152d234b70', 123, 'guest@gmail.com', 1, 1521872222, 0, ''),
 (11, 'guest', 'Guest', '202cb962ac59075b964b07152d234b70', 123, 'guest@gmail.com', 1, 1521872290, 0, 'd0225aa191b5b66af8b84dc713bd8b1f');
