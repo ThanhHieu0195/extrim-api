@@ -29,6 +29,8 @@ class MyAPI extends API
                     $response['error'] = false;
                     $response['message'] = 'Login completed';
                     $response['token'] = $user->getToken();
+                } else {
+                    $response['message'] = 'not find user!';
                 }
             } else {
                 $response['message'] = Constants::MSS_MISS_PARAMS;
