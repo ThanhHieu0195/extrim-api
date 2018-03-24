@@ -10,7 +10,8 @@
 		"57bb6f0b-487b-d383-870f-68641c90b6fb",
 		"b53db4db-a41b-6dc7-0ffd-f077f62793c5",
 		"c168ec1d-401e-36ea-3f7b-db0db24ae966",
-		"f4d0e352-7b53-addd-cce9-209925b86c37"
+		"f4d0e352-7b53-addd-cce9-209925b86c37",
+		"46ce1942-5bcf-c146-b6b4-a308b2717d7d"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -28,6 +29,49 @@
 			"pathVariables": {},
 			"pathVariableData": [],
 			"method": "POST",
+			"data": [
+				{
+					"key": "email",
+					"value": "thanhhieu0195@gmail.com",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1521888509512,
+			"name": "login",
+			"description": "",
+			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
+			"responses": []
+		},
+		{
+			"id": "46ce1942-5bcf-c146-b6b4-a308b2717d7d",
+			"headers": "token: {{token}}\n",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{token}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{api_url}}/user",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
 			"data": [
 				{
 					"key": "username",
@@ -48,8 +92,8 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1521871459829,
-			"name": "login",
+			"time": 1521887312790,
+			"name": "user_inf",
 			"description": "",
 			"collectionId": "1a2d92c5-2308-2b5e-0db5-9ee3860a8b90",
 			"responses": []
