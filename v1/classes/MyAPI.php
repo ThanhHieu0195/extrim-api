@@ -176,6 +176,7 @@ class MyAPI extends API
                         $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_FACEBOOK, $token);
                     }
 
+                    header('location: '.Constants::HOME_URL);
                     return $accessToken->getValue();
             }
 
