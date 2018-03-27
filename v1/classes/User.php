@@ -58,7 +58,7 @@ class User extends DB
         return $user;
     }
 
-    public function register($username, $display_name, $password, $birthday, $email, $type='', $token='')
+    public function register($username, $fullname, $phone, $address, $sex, $password, $email, $type='', $token='')
     {
         if ($this->hasUser(array('username' => $username))) {
             return -1;
@@ -73,13 +73,23 @@ class User extends DB
         $password = md5($password);
         $level = self::isUser;
 
-        $birthday = intval($birthday);
-
         if ( !empty($type) ) {
             $type = self::TYPE;
         }
-        if ($this->insert(self::TABLE, array('username' => $username, 'display_name' => $display_name, 'password' => $password, 'token' => $token, 'email' => $email, 'date_created' => $date_created,
-            'level' => $level, 'birthday' => $birthday, 'type' => $type))) {
+        if ($this->insert(self::TABLE,
+            array(
+                'username' => $username,
+                'fullname' => $fullname,
+                'phone' => $phone,
+                'address' => $address,
+                'sex' => $sex,
+                'password' => $password,
+                'token' => $token,
+                'email' => $email,
+                'date_created' => $date_created,
+                'level' => $level,
+                'type' => $type
+            ))) {
             $this->getUserByToken($token, true);
             return $this->user->token;
         }

@@ -20,20 +20,20 @@ class MyAPI extends API
             require_once 'User.php';
 
             $response = Constants::RESULT;
-            if (isset($_POST['email']) && isset($_POST['password'])) {
-                $email = $_POST['email'];
+            if (isset($_POST['username']) && isset($_POST['password'])) {
+                $email = $_POST['username'];
                 $password = md5($_POST['password']);
                 $user = new User();
-                $user->getUser(array('email' => $email, 'password' => $password), true);
+                $user->getUser(array('username' => $email, 'password' => $password), true);
                 if ($user->isExists()) {
                     $response['error'] = false;
-                    $response['message'] = 'Login completed';
+                    $response['message'] = 'Đăng nhập thành công!';
                     $response['token'] = $user->getToken();
                 } else {
-                    $response['message'] = 'not find user!';
+                    $response['message'] = 'Thông tinh đăng nhập không hợp lệ!';
                 }
             } else {
-                $response['message'] = Constants::MSS_MISS_PARAMS;
+                $response['message'] = 'Kiểm tra lại thông tin đăng nhập ';
             }
         } else {
             $response['message'] = Constants::MSS_NOT_SUPPORT;
@@ -41,12 +41,12 @@ class MyAPI extends API
         return $response;
     }
 
-    protected function user() {
+    protected function user()
+    {
         require_once 'User.php';
         $response = Constants::RESULT;
         if ($this->method == 'GET') {
             $user = Helper::getCurrentUser();
-
             if (!empty($user)) {
                 $response['error'] = true;
                 $response['message'] = Constants::MSS_ACTION_SUCCESSED;
@@ -97,7 +97,7 @@ class MyAPI extends API
                         }
 
                         if ($isCheck) {
-                            header('Location: '.Constants::TOKEN_URL_CALLBACK . '?token='.$token . '/');
+                            header('Location: ' . Constants::TOKEN_URL_CALLBACK . '?token=' . $token . '/');
                             exit;
                         }
                     }
@@ -194,7 +194,7 @@ class MyAPI extends API
                         $user->getUser(array('username' => $username), true);
                         $user->user->token = $token;
                         if ($user->save()) {
-                            $isCheck=true;
+                            $isCheck = true;
                         }
                     } else {
                         $isCheck = $user->register($username, $displayname, $password, $birthday, $email, User::TYPE_FACEBOOK, $token);
@@ -202,7 +202,7 @@ class MyAPI extends API
                     }
 
                     if ($isCheck) {
-                        header('Location: '.Constants::TOKEN_URL_CALLBACK . '?token='.$token . '/');
+                        header('Location: ' . Constants::TOKEN_URL_CALLBACK . '?token=' . $token . '/');
                         exit;
                     }
             }
@@ -218,28 +218,42 @@ class MyAPI extends API
             require_once 'User.php';
             if (isset($_POST['username'])
                 && isset($_POST['password'])
-                && isset($_POST['birthday'])
                 && isset($_POST['email'])
-                && isset($_POST['displayname'])
+                && isset($_POST['fullname'])
+                && isset($_POST['sex'])
+                && isset($_POST['address'])
+                && isset($_POST['phone'])
             ) {
                 $username = $_POST['username'];
-                $displayname = $_POST['displayname'];
+                $fullname = $_POST['fullname'];
                 $password = $_POST['password'];
-                $birthday = $_POST['birthday'];
                 $email = $_POST['email'];
+                $address = $_POST['address'];
+                $phone = $_POST['phone'];
+                $sex = $_POST['sex'];
                 $type = User::TYPE;
                 $user = new User();
 
-                $result = $user->register($username, $displayname, $password, $birthday, $email, $type);
-                if ($result == 1) {
-                    $response['status'] = true;
-                    $response['message'] = Constants::MSS_CREATED;
-                    $response['token'] = $user->getToken();
+                $result = $user->register(
+                    $username,
+                    $fullname,
+                    $phone,
+                    $address,
+                    $sex,
+                    $password,
+                    $email,
+                    $type
+                );
+
+                if ($result > 0) {
+                    $response['error'] = false;
+                    $response['message'] = 'Tạo tài khoản thành công';
+                    $response['token'] = $result;
                 } else if ($result == -1) {
-                    $response['message'] = Constants::MSS_DUPPLICATION_KEY;
+                    $response['message'] = 'Tài khoản đã tồn tại';
                 }
             } else {
-                $response['message'] = Constants::MSS_MISS_PARAMS;
+                $response['message'] = 'Thiếu thông tin! vui lòng kiểm tra lại.';
             }
         } else {
             $response['message'] = "Only accepts POST requests";
@@ -255,7 +269,7 @@ class MyAPI extends API
         switch ($this->method) {
             case 'GET':
                 //get information product -> /api/v1/product/:id [GET]
-                if ( isset($_GET['id']) ) {
+                if (isset($_GET['id'])) {
                     $id = $_GET['id'];
                     return $product->getProduct($id);
                 } else {
@@ -272,7 +286,7 @@ class MyAPI extends API
                     return $response;
                 }
 
-                if ($this->verb=='create') {
+                if ($this->verb == 'create') {
                     if (isset($_POST['title'])
                         && isset($_POST['description'])
                         && isset($_POST['content'])
@@ -314,8 +328,8 @@ class MyAPI extends API
                     return $response;
                 }
 
-                if ($this->verb=='delete') {
-                    if ( isset($_GET['id'])) {
+                if ($this->verb == 'delete') {
+                    if (isset($_GET['id'])) {
                         $id = intval($_GET['id']);
                         if ($id) {
                             $product->getService($id);
@@ -343,8 +357,8 @@ class MyAPI extends API
                     return $response;
                 }
 
-                if ($this->verb=='update') {
-                    if ( isset($_GET['id']) && !empty($this->file) ) {
+                if ($this->verb == 'update') {
+                    if (isset($_GET['id']) && !empty($this->file)) {
                         $id = intval($_GET['id']);
                         $params = json_decode($this->file);
                         if ($id) {
@@ -414,7 +428,7 @@ class MyAPI extends API
         switch ($this->method) {
             case 'GET':
                 //get information service -> /api/v1/service/:id [GET]
-                if ( isset($_GET['id']) ) {
+                if (isset($_GET['id'])) {
                     $id = $_GET['id'];
                     return $service->getService($id);
                 } else {
@@ -431,7 +445,7 @@ class MyAPI extends API
                     return $response;
                 }
 
-                if ($this->verb=='create') {
+                if ($this->verb == 'create') {
                     if (isset($_POST['title']) && isset($_POST['description']) && isset($_POST['price']) && isset($_POST['attachment'])) {
                         $title = $service->escape($_POST['title']);
                         $price = floatval($_POST['price']);
@@ -461,8 +475,8 @@ class MyAPI extends API
                     return $response;
                 }
 
-                if ($this->verb=='delete') {
-                    if ( isset($_GET['id'])) {
+                if ($this->verb == 'delete') {
+                    if (isset($_GET['id'])) {
                         $id = intval($_GET['id']);
                         if ($id) {
                             $service->getService($id);
@@ -490,8 +504,8 @@ class MyAPI extends API
                     return $response;
                 }
 
-                if ($this->verb=='update') {
-                    if ( isset($_GET['id']) && !empty($this->file) ) {
+                if ($this->verb == 'update') {
+                    if (isset($_GET['id']) && !empty($this->file)) {
                         $id = intval($_GET['id']);
                         $params = json_decode($this->file);
                         if ($id) {
@@ -521,5 +535,178 @@ class MyAPI extends API
         }
         return Constants::MSS_NOT_SUPPORT;
 
+    }
+
+    protected function admin()
+    {
+        $response = Constants::RESULT;
+        switch ($this->verb) {
+            case 'login';
+                if ($this->method == 'POST') {
+                    require_once 'User.php';
+                    $response = Constants::RESULT;
+                    if (isset($_POST['username']) && isset($_POST['password'])) {
+                        $username = $_POST['username'];
+                        $password = md5($_POST['password']);
+                        $user = new User();
+                        $user->getUser(array('username' => $username, 'password' => $password), true);
+                        if ($user->isExists() && $user->isAdmin()) {
+                            $response['error'] = false;
+                            $response['message'] = 'Login completed';
+                            $response['token'] = $user->getToken();
+                        } else {
+                            $response['message'] = 'not find user!';
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                } else {
+                    $response['message'] = Constants::MSS_NOT_SUPPORT;
+                }
+                break;
+            case 'token':
+                require_once 'User.php';
+                if (Helper::checkPerfomance(User::isAdmin)) {
+                    $response['error'] = false;
+                    $response['message'] = 'user is admin!';
+                } else {
+                    $response['message'] = 'user is not permisson!';
+                }
+                break;
+            default:
+                $response['message'] = Constants::MSS_NOT_SUPPORT;
+        }
+        return $response;
+    }
+
+    protected function news()
+    {
+        require_once 'News.php';
+        $news = new News();
+        $response = Constants::RESULT;
+
+        switch ($this->method) {
+            case 'GET':
+                //get information service -> /api/v1/service/:id [GET]
+                switch ($this->verb) {
+                    case 'special';
+
+                        if (isset($_GET['special'])) {
+
+                            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : Constants::NUMSERVICE;
+                            $special = $_GET['special'];
+                            $special_id = -1;
+                            if ($special == 'show_home') {
+                                $special_id = News::SPECIAL_SHOWHOME;
+                            }
+
+                            $response['error'] = false;
+                            $response['message'] = Constants::MSS_ACTION_SUCCESSED;
+                            $result = $news->getNewBySpecial($special_id, $limit);
+                            $response['data'] = $result;
+                        }
+                        break;
+                }
+                break;
+            case 'POST':
+                $response = Constants::RESULT;
+
+                //create new service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb == 'create') {
+                    if (isset($_POST['title']) && isset($_POST['description']) && isset($_POST['price']) && isset($_POST['attachment'])) {
+                        $title = $news->escape($_POST['title']);
+                        $price = floatval($_POST['price']);
+                        $attacment = $_POST['attachment'];
+                        $description = $_POST['description'];
+                        $id = $news->create($title, $description, $price, $attacment);
+                        if ($id) {
+                            $response['error'] = false;
+                            $response['message'] = Constants::MSS_CREATED;
+                            $response['id'] = $id;
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            case 'DELETE':
+                $response = Constants::RESULT;
+
+                //update service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb == 'delete') {
+                    if (isset($_GET['id'])) {
+                        $id = intval($_GET['id']);
+                        if ($id) {
+                            $news->getNew($id);
+                            $result = $news->remove();
+                            if ($result) {
+                                $response['error'] = false;
+                                $response['message'] = Constants::MSS_DELETE;
+                            }
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            case 'PUT':
+                $response = Constants::RESULT;
+
+                //update service -> /api/v1/service/create [POST]
+                require_once 'User.php';
+
+                if (!Helper::checkPerfomance(User::isAdmin)) {
+                    $response['message'] = Constants::MSS_NOT_PERFORMANCE;
+                    return $response;
+                }
+
+                if ($this->verb == 'update') {
+                    if (isset($_GET['id']) && !empty($this->file)) {
+                        $id = intval($_GET['id']);
+                        $params = json_decode($this->file);
+                        if ($id) {
+                            $news->getNew($id);
+                            if ($news->isExists()) {
+                                if (!empty($params)) {
+                                    foreach ($params as $key => $value) {
+                                        $news->{$key} = $value;
+                                    }
+                                }
+                                $result = $news->save();
+                                if ($result) {
+                                    $response['error'] = false;
+                                    $response['message'] = Constants::MSS_UPDATED;
+                                    $response['data'] = $news->service;
+                                }
+                            }
+                        } else {
+                            $response['message'] = Constants::MSS_API_NOTWORK;
+                        }
+                    } else {
+                        $response['message'] = Constants::MSS_MISS_PARAMS;
+                    }
+                    return $response;
+                }
+            default:
+        }
+        return $response;
     }
 }
